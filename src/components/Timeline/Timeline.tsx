@@ -157,11 +157,20 @@ export const Timeline = () => {
                             prevEl: ".timeline__events-arrow--left",
                             nextEl: ".timeline__events-arrow--right"
                         }}
+                        onProgress={(swiper) => {
+                            if (!eventsAnimRef.current) return;
+
+                            if (swiper.isEnd) {
+                                eventsAnimRef.current.classList.add("no-fade");
+                            } else {
+                                eventsAnimRef.current.classList.remove("no-fade");
+                            }
+                        }}
                         breakpoints={{
                             0: {
                                 slidesPerView: 1.5,
                                 spaceBetween: 20,
-                                navigation: false,
+                                navigation: { enabled: false },
                                 pagination: {
                                     el: ".timeline__events-pagination",
                                     clickable: true,
