@@ -3,8 +3,9 @@ import { periods } from "./data";
 import './Timeline.scss';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, FreeMode } from 'swiper/modules';
+import { Navigation, FreeMode, Pagination } from 'swiper/modules';
 import { gsap } from "gsap";
 
 export const Timeline = () => {
@@ -79,7 +80,7 @@ export const Timeline = () => {
     }, [activePeriod]);
 
     return (
-        <div className="timeline">
+        <div className={"timeline"}>
             <div className="timeline-wrapper__line timeline-wrapper__line--left"></div>
             <div className="timeline-wrapper__line timeline-wrapper__line--right"></div>
 
@@ -116,22 +117,28 @@ export const Timeline = () => {
             </div>
 
             <div className="timeline__bottom">
-                <div className="timeline__counter">
-                    {(activePeriod + 1).toString().padStart(2, "0")}/
-                    {totalPeriods.toString().padStart(2, "0")}
-                </div>
+                <div className="timeline__nav-row">
+                    <div className="timeline__counter-wrapper">
+                        <div className="timeline__counter">
+                            {(activePeriod + 1).toString().padStart(2, "0")}/
+                            {totalPeriods.toString().padStart(2, "0")}
+                        </div>
 
-                <div className="timeline__section-arrows">
-                    <button className="timeline__arrow" onClick={prevPeriod} disabled={activePeriod === 0}>
-                        <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.66418 0.707108L1.41419 6.95711L7.66418 13.2071" stroke="#42567A" stroke-width="2" />
-                        </svg>
-                    </button>
-                    <button className="timeline__arrow" onClick={nextPeriod} disabled={activePeriod === totalPeriods - 1}>
-                        <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0.707092 0.707108L6.95709 6.95711L0.707093 13.2071" stroke="#42567A" stroke-width="2" />
-                        </svg>
-                    </button>
+                        <div className="timeline__section-arrows">
+                            <button className="timeline__arrow" onClick={prevPeriod} disabled={activePeriod === 0}>
+                                <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7.66418 0.707108L1.41419 6.95711L7.66418 13.2071" stroke="#42567A" stroke-width="2" />
+                                </svg>
+                            </button>
+                            <button className="timeline__arrow" onClick={nextPeriod} disabled={activePeriod === totalPeriods - 1}>
+                                <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.707092 0.707108L6.95709 6.95711L0.707093 13.2071" stroke="#42567A" stroke-width="2" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="timeline__events-pagination"></div>
+                    <div className="timeline__nav-spacer"></div>
                 </div>
 
                 <div className="timeline__events" ref={eventsAnimRef}>
@@ -142,13 +149,28 @@ export const Timeline = () => {
                     </button>
                     <Swiper
                         ref={eventsSwiperRef}
-                        modules={[Navigation, FreeMode]}
+                        modules={[Navigation, FreeMode, Pagination]}
                         freeMode={true}
                         slidesPerView={3}
                         spaceBetween={80}
                         navigation={{
                             prevEl: ".timeline__events-arrow--left",
                             nextEl: ".timeline__events-arrow--right"
+                        }}
+                        breakpoints={{
+                            0: {
+                                slidesPerView: 1.5,
+                                spaceBetween: 20,
+                                navigation: false,
+                                pagination: {
+                                    el: ".timeline__events-pagination",
+                                    clickable: true,
+                                }
+                            },
+                            768: {
+                                slidesPerView: 3,
+                                spaceBetween: 80,
+                            }
                         }}
                     >
                         {section.events.map(p => (
@@ -160,6 +182,7 @@ export const Timeline = () => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
+
                     <button className="timeline__events-arrow timeline__events-arrow--right">
                         <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0.707093 0.707092L5.70709 5.70709L0.707093 10.7071" stroke="#3877EE" stroke-width="2" />
